@@ -189,6 +189,12 @@ pub trait Colorize {
             b: color.b,
         })
     }
+    fn xterm265_color(self, color_num: u8) -> ColoredString
+    where
+        Self: Sized,
+    {
+        self.color(Color::Xterm256 { color_num })
+    }
     fn color<S: Into<Color>>(self, color: S) -> ColoredString;
     // Background Colors
     fn on_black(self) -> ColoredString
@@ -314,6 +320,12 @@ pub trait Colorize {
             g: color.g,
             b: color.b,
         })
+    }
+    fn on_xterm265_color(self, color_num: u8) -> ColoredString
+    where
+        Self: Sized,
+    {
+        self.on_color(Color::Xterm256 { color_num })
     }
     fn on_color<S: Into<Color>>(self, color: S) -> ColoredString;
     // Styles
@@ -673,6 +685,8 @@ mod tests {
         println!("{}", toto.truecolor(255, 0, 0));
         println!("{}", toto.truecolor(255, 255, 0));
         println!("{}", toto.on_truecolor(0, 80, 80));
+        println!("{}", toto.xterm265_color(207));
+        println!("{}", toto.on_xterm265_color(207));
         // uncomment to see term output
         // assert!(false)
     }
@@ -757,6 +771,22 @@ mod tests {
         assert_eq!(
             blue_bold_on_blue,
             "".blue().bold().on_blue().compute_style()
+        );
+    }
+
+    #[cfg_attr(feature = "no-color", ignore)]
+    #[test]
+    fn compute_style_xterm256() {
+        let hot_pink = "\x1B[38;5;200m";
+        let on_hot_pink = "\x1B[48;5;200m";
+
+        assert_eq!(
+            hot_pink,
+            "".xterm265_color(200).compute_style()
+        );
+        assert_eq!(
+            on_hot_pink,
+            "".on_xterm265_color(200).compute_style()
         );
     }
 

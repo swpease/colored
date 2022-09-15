@@ -21,6 +21,7 @@ pub enum Color {
     BrightCyan,
     BrightWhite,
     TrueColor { r: u8, g: u8, b: u8 },
+    Xterm256 { color_num: u8},
 }
 
 #[allow(missing_docs)]
@@ -44,6 +45,7 @@ impl Color {
             Color::BrightCyan => "96".into(),
             Color::BrightWhite => "97".into(),
             Color::TrueColor { r, g, b } => format!("38;2;{};{};{}", r, g, b).into(),
+            Color::Xterm256 { color_num } => format!("38;5;{}", color_num).into(),
         }
     }
 
@@ -66,6 +68,7 @@ impl Color {
             Color::BrightCyan => "106".into(),
             Color::BrightWhite => "107".into(),
             Color::TrueColor { r, g, b } => format!("48;2;{};{};{}", r, g, b).into(),
+            Color::Xterm256 { color_num } => format!("48;5;{}", color_num).into(),
         }
     }
 }
